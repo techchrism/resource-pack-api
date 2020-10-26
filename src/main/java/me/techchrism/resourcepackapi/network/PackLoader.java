@@ -2,21 +2,31 @@ package me.techchrism.resourcepackapi.network;
 
 import me.techchrism.resourcepackapi.pack.ResourcePack;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 public class PackLoader
 {
+    /**
+     * Turns a ResourcePack into a LoadedResourcePack by saving it to a file
+     * @param pack the ResourcePack to load
+     * @param root the directory to save the file to
+     * @param name the name of the file (will be appended with .zip)
+     * @return the LoadedResourcePack after saving the file
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     */
     public static LoadedResourcePack load(ResourcePack pack, File root, String name) throws IOException, NoSuchAlgorithmException
     {
         File packFile = new File(root, name + ".zip");
         FileOutputStream fos = new FileOutputStream(packFile);
         pack.writeToZip(fos);
         byte[] hash = createSha1(packFile);
-        System.out.println("Hash: " + Base64.getEncoder().encodeToString(hash));
         return new LoadedResourcePack(packFile, hash);
     }
     

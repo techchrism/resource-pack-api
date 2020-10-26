@@ -59,7 +59,6 @@ public class NettyHTTPSender extends SimpleChannelInboundHandler<Object>
                     }
                     else
                     {
-                        System.out.println("Sending pack for id " + id.toString());
                         writeZipResponse(ctx, trailer, loadedResourcePack.getFile());
                     }
                 }
