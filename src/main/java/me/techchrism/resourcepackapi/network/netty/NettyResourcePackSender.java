@@ -2,7 +2,6 @@ package me.techchrism.resourcepackapi.network.netty;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import me.techchrism.resourcepackapi.ResourcePackPlugin;
 import me.techchrism.resourcepackapi.network.Expires;
 import me.techchrism.resourcepackapi.network.LoadedResourcePack;
 import me.techchrism.resourcepackapi.network.PackLoader;
@@ -16,6 +15,8 @@ import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+import static me.techchrism.resourcepackapi.ResourcePackAPI.QUEUE_FOLDER;
 
 public class NettyResourcePackSender implements ResourcePackSender
 {
@@ -87,7 +88,7 @@ public class NettyResourcePackSender implements ResourcePackSender
         try
         {
             UUID tempId = UUID.randomUUID();
-            LoadedResourcePack loadedPack = PackLoader.load(pack, ResourcePackPlugin.QUEUE_FOLDER, tempId.toString());
+            LoadedResourcePack loadedPack = PackLoader.load(pack, QUEUE_FOLDER, tempId.toString());
             packs.put(tempId, new Expires<>(loadedPack));
             
             player.setResourcePack(packURL.replaceAll("\\{local-ip}", InetAddress.getLocalHost().getHostAddress())

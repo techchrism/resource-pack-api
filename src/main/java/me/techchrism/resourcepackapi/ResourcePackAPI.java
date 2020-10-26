@@ -1,19 +1,65 @@
 package me.techchrism.resourcepackapi;
 
 import me.techchrism.resourcepackapi.network.ResourcePackSender;
+import me.techchrism.resourcepackapi.network.netty.NettyResourcePackSender;
 import me.techchrism.resourcepackapi.pack.ResourcePack;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public class ResourcePackAPI
+import java.io.File;
+import java.io.IOException;
+
+public class ResourcePackAPI extends JavaPlugin implements Listener
 {
-    private final RegistrationIDStore registrationIDStore;
-    private final ResourcePackSender resourcePackSender;
+    private static RegistrationIDStore registrationIDStore;
+    private static ResourcePackSender resourcePackSender;
+    public static File PLUGIN_FOLDER;
+    public static File QUEUE_FOLDER;
     
-    protected ResourcePackAPI(RegistrationIDStore registrationIDStore, ResourcePackSender resourcePackSender)
+    @Override
+    public void onEnable()
     {
-        this.registrationIDStore = registrationIDStore;
-        this.resourcePackSender = resourcePackSender;
+        // Set up directories
+        PLUGIN_FOLDER = getDataFolder();
+        if(!PLUGIN_FOLDER.exists())
+        {
+            PLUGIN_FOLDER.mkdir();
+        }
+        QUEUE_FOLDER = new File(PLUGIN_FOLDER, "resource-pack-sending-queue");
+        if(!QUEUE_FOLDER.exists())
+        {
+            QUEUE_FOLDER.mkdir();
+        }
+        
+        // Initialize registration store
+        try
+        {
+            registrationIDStore = new RegistrationIDStore(new File(getDataFolder(), "id-store.txt"));
+        }
+        catch(IOException e)
+        {
+            getLogger().severe("Could not initialize data id store");
+            e.printStackTrace();
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
+        
+        resourcePackSender = new NettyResourcePackSender();
+        resourcePackSender.setURL("http://localhost:{port}/{pack-id}");
+        resourcePackSender.start();
+        
+        getServer().getScheduler().scheduleSyncRepeatingTask(
+                this, () -> resourcePackSender.cleanPending(), 0L, (20 * 60));
+        
+        getServer().getPluginManager().registerEvents(this, this);
+    }
+    
+    @Override
+    public void onDisable()
+    {
+        resourcePackSender.stop();
     }
     
     /**
@@ -21,7 +67,7 @@ public class ResourcePackAPI
      *
      * @param player The player to compile the resource pack for
      */
-    public void recompilePack(Player player)
+    public static void recompilePack(Player player)
     {
         ResourcePack pack = getDefaultPack();
         ResourcePackCompileEvent event = new ResourcePackCompileEvent(pack, player);
@@ -45,7 +91,7 @@ public class ResourcePackAPI
      *
      * @return the default pack
      */
-    public ResourcePack getDefaultPack()
+    public static ResourcePack getDefaultPack()
     {
         ResourcePack defaultPack = new ResourcePack();
         defaultPack.setPackFormat(4);
@@ -67,17 +113,17 @@ public class ResourcePackAPI
      *
      * @return the server port
      */
-    public int getServerPort()
+    public static int getServerPort()
     {
         return Bukkit.getPort();
     }
     
-    public String getPackUrl()
+    public static String getPackUrl()
     {
         return resourcePackSender.getURL();
     }
     
-    public void setPackUrl(String packUrl)
+    public static void setPackUrl(String packUrl)
     {
         resourcePackSender.setURL(packUrl);
     }
