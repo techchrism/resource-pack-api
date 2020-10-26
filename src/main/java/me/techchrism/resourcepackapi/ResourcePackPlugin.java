@@ -18,21 +18,24 @@ import java.io.InputStream;
 public class ResourcePackPlugin extends JavaPlugin implements Listener
 {
     private ResourcePackSender resourcePackSender;
-    public static ResourcePackPlugin INSTANCE;
     private String bruhSound = "";
     public static File PLUGIN_FOLDER;
+    public static File QUEUE_FOLDER;
     private ResourcePackAPI api;
     
     @Override
     public void onEnable()
     {
-        INSTANCE = this;
-    
         // Set up directories
         PLUGIN_FOLDER = getDataFolder();
         if(!PLUGIN_FOLDER.exists())
         {
             PLUGIN_FOLDER.mkdir();
+        }
+        QUEUE_FOLDER = new File(PLUGIN_FOLDER, "resource-pack-sending-queue");
+        if(!QUEUE_FOLDER.exists())
+        {
+            QUEUE_FOLDER.mkdir();
         }
     
         // Initialize registration store

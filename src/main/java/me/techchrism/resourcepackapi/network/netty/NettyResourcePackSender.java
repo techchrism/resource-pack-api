@@ -87,7 +87,7 @@ public class NettyResourcePackSender implements ResourcePackSender
         try
         {
             UUID tempId = UUID.randomUUID();
-            LoadedResourcePack loadedPack = PackLoader.load(pack, ResourcePackPlugin.INSTANCE.getDataFolder(), tempId.toString());
+            LoadedResourcePack loadedPack = PackLoader.load(pack, ResourcePackPlugin.QUEUE_FOLDER, tempId.toString());
             packs.put(tempId, new Expires<>(loadedPack));
             
             player.setResourcePack(packURL.replaceAll("\\{local-ip}", InetAddress.getLocalHost().getHostAddress())
