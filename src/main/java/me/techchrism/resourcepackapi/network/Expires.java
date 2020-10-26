@@ -1,15 +1,14 @@
 package me.techchrism.resourcepackapi.network;
 
+/**
+ * Basic container class that holds a value that will expire in the future
+ * @param <T> The class to hold
+ */
 public class Expires<T extends Expirable>
 {
     private static final long EXPIRE_TIME = (1000 * 60);
     private final long queuedTime = System.currentTimeMillis();
     private T value;
-    
-    public Expires()
-    {
-    
-    }
     
     public Expires(T value)
     {

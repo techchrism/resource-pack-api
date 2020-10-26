@@ -8,10 +8,10 @@ import org.bukkit.event.HandlerList;
 
 public class ResourcePackCompileEvent extends Event implements Cancellable
 {
-    private ResourcePack resourcePack;
+    private final ResourcePack resourcePack;
     private static final HandlerList HANDLERS = new HandlerList();
     private boolean cancelled = false;
-    private Player player;
+    private final Player player;
     
     public ResourcePackCompileEvent(ResourcePack resourcePack, Player player)
     {

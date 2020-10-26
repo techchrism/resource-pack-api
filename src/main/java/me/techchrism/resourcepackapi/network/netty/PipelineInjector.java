@@ -5,6 +5,9 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
+/**
+ * Class designed to hook into the main channel and inject a handler into netty subchannels
+ */
 public class PipelineInjector extends ChannelInboundHandlerAdapter
 {
     private final String name;
@@ -19,8 +22,7 @@ public class PipelineInjector extends ChannelInboundHandlerAdapter
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg)
     {
-        Channel channel = (Channel) msg;
-        channel.pipeline().addFirst(name, handler);
+        ((Channel) msg).pipeline().addFirst(name, handler);
         ctx.fireChannelRead(msg);
     }
 }

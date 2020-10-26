@@ -8,8 +8,8 @@ import java.util.Map;
 
 public class RegistrationIDStore
 {
-    private File storageFile;
-    private HashMap<NamespacedKey, Integer> ids = new HashMap<>();
+    private final File storageFile;
+    private final HashMap<NamespacedKey, Integer> ids = new HashMap<>();
     private boolean changed = false;
     
     // Choose 2000 as a starting value so any additions from other resource packs have something to work with

@@ -28,6 +28,9 @@ public class NettyResourcePackSender implements ResourcePackSender
     
     }
     
+    /**
+     * Adds to the default Minecraft server netty channel to intercept GET requests
+     */
     public void inject()
     {
         try
@@ -46,15 +49,24 @@ public class NettyResourcePackSender implements ResourcePackSender
         }
         catch(Exception e)
         {
+            System.err.println("Error injecting into netty channel:");
             e.printStackTrace();
         }
     }
     
+    /**
+     * Removes netty channel pipeline injector
+     */
     public void cleanup()
     {
         channel.pipeline().remove("pipeline_injector");
     }
     
+    /**
+     * Gets a loaded pack by its temporary id
+     * @param tempId the temporary id of the pack
+     * @return null if the pack doesn't exist or if it has expired, otherwise it returns the loaded pack
+     */
     public LoadedResourcePack getPack(UUID tempId)
     {
         if(!packs.containsKey(tempId))
