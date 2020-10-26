@@ -31,7 +31,7 @@ public class NettyResourcePackSender implements ResourcePackSender
     /**
      * Adds to the default Minecraft server netty channel to intercept GET requests
      */
-    public void inject()
+    public void start()
     {
         try
         {
@@ -57,7 +57,7 @@ public class NettyResourcePackSender implements ResourcePackSender
     /**
      * Removes netty channel pipeline injector
      */
-    public void cleanup()
+    public void stop()
     {
         channel.pipeline().remove("pipeline_injector");
     }

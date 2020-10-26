@@ -6,6 +6,16 @@ import org.bukkit.entity.Player;
 public interface ResourcePackSender
 {
     /**
+     * Must be called to start any services the sender requires
+     */
+    void start();
+    
+    /**
+     * Called to stop any services the sender started
+     */
+    void stop();
+    
+    /**
      * Sends the resource pack to the specified player
      * Involves saving the pack to a file, hashing the file, and adding it to the http queue
      * @param player The player to send the pack to

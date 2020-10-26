@@ -1,5 +1,6 @@
 package me.techchrism.resourcepackapi;
 
+import me.techchrism.resourcepackapi.network.ResourcePackSender;
 import me.techchrism.resourcepackapi.network.netty.NettyResourcePackSender;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -16,7 +17,7 @@ import java.io.InputStream;
 
 public class ResourcePackPlugin extends JavaPlugin implements Listener
 {
-    private NettyResourcePackSender resourcePackSender;
+    private ResourcePackSender resourcePackSender;
     public static ResourcePackPlugin INSTANCE;
     private String bruhSound = "";
     public static File PLUGIN_FOLDER;
@@ -50,7 +51,7 @@ public class ResourcePackPlugin extends JavaPlugin implements Listener
         
         resourcePackSender = new NettyResourcePackSender();
         resourcePackSender.setURL("http://localhost:{port}/{pack-id}");
-        resourcePackSender.inject();
+        resourcePackSender.start();
         api = new ResourcePackAPI(store, resourcePackSender);
     
         getServer().getScheduler().scheduleSyncRepeatingTask(
@@ -62,7 +63,7 @@ public class ResourcePackPlugin extends JavaPlugin implements Listener
     @Override
     public void onDisable()
     {
-        resourcePackSender.cleanup();
+        resourcePackSender.stop();
     }
     
     @EventHandler(ignoreCancelled = true)
