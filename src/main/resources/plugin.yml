@@ -1,0 +1,5 @@
+name: ResourcePackAPI
+version: ${project.version}
+main: me.techchrism.resourcepackapi.ResourcePackPlugin
+api-version: 1.13
+author: Techdoodle
