@@ -103,15 +103,7 @@ public class NettyResourcePackSender implements ResourcePackSender
     @Override
     public void cleanPending()
     {
-        packs.entrySet().removeIf(uuidExpiresEntry ->
-        {
-            if(uuidExpiresEntry.getValue().isExpired())
-            {
-                uuidExpiresEntry.getValue().get().onExpire();
-                return true;
-            }
-            return false;
-        });
+        packs.entrySet().removeIf(uuidExpiresEntry -> uuidExpiresEntry.getValue().isExpired());
     }
     
     @Override

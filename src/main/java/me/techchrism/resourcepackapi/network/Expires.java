@@ -6,8 +6,9 @@ package me.techchrism.resourcepackapi.network;
  */
 public class Expires<T extends Expirable>
 {
-    private static final long EXPIRE_TIME = (1000 * 60);
-    private final long queuedTime = System.currentTimeMillis();
+    private static final long EXPIRE_TIME_NANOS = 1000L * 1000L * 1000L * 60L;
+    private final long queuedTime = System.nanoTime();
+    private boolean hasExpired = false;
     private T value;
     
     public Expires(T value)
@@ -17,7 +18,16 @@ public class Expires<T extends Expirable>
     
     public boolean isExpired()
     {
-        return (this.queuedTime + EXPIRE_TIME < System.currentTimeMillis());
+        if(this.queuedTime + EXPIRE_TIME_NANOS < System.nanoTime())
+        {
+            if(!hasExpired)
+            {
+                value.onExpire();
+                hasExpired = true;
+            }
+            return true;
+        }
+        return false;
     }
     
     public T get()
