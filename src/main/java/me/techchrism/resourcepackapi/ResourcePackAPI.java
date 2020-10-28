@@ -5,13 +5,12 @@ import me.techchrism.resourcepackapi.network.netty.NettyResourcePackSender;
 import me.techchrism.resourcepackapi.pack.ResourcePack;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 
-public class ResourcePackAPI extends JavaPlugin implements Listener
+public class ResourcePackAPI extends JavaPlugin
 {
     private static RegistrationIDStore registrationIDStore;
     private static ResourcePackSender resourcePackSender;
@@ -52,8 +51,6 @@ public class ResourcePackAPI extends JavaPlugin implements Listener
         
         getServer().getScheduler().scheduleSyncRepeatingTask(
                 this, () -> resourcePackSender.cleanPending(), 0L, (20 * 60));
-        
-        getServer().getPluginManager().registerEvents(this, this);
     }
     
     @Override
